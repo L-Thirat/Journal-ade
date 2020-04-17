@@ -3,44 +3,50 @@ import pandas as pd
 import numpy as np
 
 
-class IsNull():
+class IsNull:
     """For each value of base feature, return true if value is null"""
+
     # name = "is_null"
     # input_types = [Variable]
     # return_type = Boolean
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         return lambda array: pd.isnull(pd.Series(array))
 
 
-class Absolute():
+class Absolute:
     """Absolute value of base feature"""
+
     # name = "absolute"
     # input_types = [Numeric]
     # return_type = Numeric
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         return lambda array: np.absolute(array)
 
 
-class DatetimeUnitBasePrimitive():
+class DatetimeUnitBasePrimitive:
     """Transform Datetime feature into time or calendar units (second/day/week/etc)"""
     name = None
+
     # input_types = [Datetime]
     # return_type = Ordinal
 
     def get_function(self):
         return lambda array: pd_time_unit(self.name)(pd.DatetimeIndex(array))
 
-class TimedeltaUnitBasePrimitive():
+
+class TimedeltaUnitBasePrimitive:
     """Transform Timedelta features into number of time units (seconds/days/etc) they encompass"""
     name = None
+
     # input_types = [Timedelta]
     # return_type = Numeric
 
     def get_function(self):
         return lambda array: pd_time_unit(self.name)(pd.TimedeltaIndex(array))
-
 
 
 class Day(DatetimeUnitBasePrimitive):
@@ -114,13 +120,15 @@ class Years(TimedeltaUnitBasePrimitive):
         return lambda array: pd_time_unit("days")(pd.TimedeltaIndex(array)) / 365
 
 
-class Weekend():
+class Weekend:
     """Transform Datetime feature into the boolean of Weekend"""
     name = "is_weekend"
+
     # input_types = [Datetime]
     # return_type = Boolean
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         return lambda df: pd_time_unit("weekday")(pd.DatetimeIndex(df)) > 4
 
 
@@ -128,46 +136,55 @@ class Weekday(DatetimeUnitBasePrimitive):
     name = "weekday"
 
 
-class TimeSince():
+class TimeSince:
     """For each value of the base feature, compute the timedelta between it and a datetime"""
     name = "time_since"
+
     # input_types = [[DatetimeTimeIndex], [Datetime]]
     # return_type = Timedelta
     # uses_calc_time = True
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         def pd_time_since(array, time):
             if time is None:
                 time = datetime.now()
             return (time - pd.DatetimeIndex(array)).values
+
         return pd_time_since
 
 
-class DaysSince():
+class DaysSince:
     """For each value of the base feature, compute the number of days between it and a datetime"""
     name = "days_since"
+
     # input_types = [DatetimeTimeIndex]
     # return_type = Numeric
     # uses_calc_time = True
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         def pd_days_since(array, time):
             if time is None:
                 time = datetime.now()
             return pd_time_unit('days')(time - pd.DatetimeIndex(array))
+
         return pd_days_since
 
 
-class Percentile():
+class Percentile:
     name = 'percentile'
+
     # input_types = [Numeric]
     # return_type = Numeric
 
-    def get_function(self):
+    @staticmethod
+    def get_function():
         return lambda array: pd.Series(array).rank(pct=True)
 
 
 def pd_time_unit(time_unit):
     def inner(pd_index):
         return getattr(pd_index, time_unit).values
+
     return inner

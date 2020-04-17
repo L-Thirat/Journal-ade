@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="831cda67-3d30-42df-b2c1-7488445a2b1f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/bdmcore/column_characterizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/column_characterizer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/d_type.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/d_type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/dictionary/problemDefine.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dictionary/problemDefine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/dictionary/type.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dictionary/type.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/dsproject.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dsproject.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bdmcore/encoder/label_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/encoder/label_encoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bdmcore/dfs/method.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dfs/method.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bdmcore/dictionary/datadict.py" beforeDir="false" afterPath="$PROJECT_DIR$/bdmcore/dictionary/datadict.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,44 +15,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bdmcore/d_type.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bdmcore/column_characterizer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="418" lean-forward="true" selection-start-line="418" selection-end-line="418" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bdmcore/cleaning.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bdmcore/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bdmcore/selection/method.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -83,10 +42,58 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
+            <state relative-caret-position="306">
               <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bdmcore/dfs/method.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="23" column="19" lean-forward="true" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="332" column="14" selection-start-line="332" selection-start-column="14" selection-end-line="332" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bdmcore/clean_data/clean.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -116,11 +123,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bdmcore/dictionary/datadict.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="-29">
+              <caret line="242" column="47" selection-start-line="242" selection-start-column="47" selection-end-line="242" selection-end-column="47" />
+              <folding>
+                <element signature="e#789#807#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -136,9 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>i_len</find>
-      <find>characterize</find>
-      <find>dsproject</find>
       <find>main_df</find>
       <find>feature_extraction</find>
       <find>dsproject import config</find>
@@ -165,7 +172,10 @@
       <find>numeric</find>
       <find>Converter</find>
       <find>converter</find>
+      <find>featureProperty</find>
       <find>ex</find>
+      <find>Zero_Count</find>
+      <find>zero_count</find>
     </findStrings>
     <replaceStrings>
       <replace>DSProject</replace>
@@ -176,6 +186,7 @@
       <replace>select_chi2</replace>
       <replace>Characterizer</replace>
       <replace>Converter</replace>
+      <replace>FeatureProperty</replace>
       <replace>new_df</replace>
     </replaceStrings>
   </component>
@@ -188,9 +199,6 @@
         <option value="$PROJECT_DIR$/bdmcore/clean_data/clean.py" />
         <option value="$PROJECT_DIR$/bdmcore/data_meaning/characterizer.py" />
         <option value="$PROJECT_DIR$/bdmcore/data_meaning/rule0_dstype.py" />
-        <option value="$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py" />
-        <option value="$PROJECT_DIR$/bdmcore/dfs/method.py" />
-        <option value="$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py" />
         <option value="$PROJECT_DIR$/project/fb_recruitingiv/src/project_init_sv.py" />
         <option value="$PROJECT_DIR$/bdmcore/cleaning.py" />
         <option value="$PROJECT_DIR$/README.md" />
@@ -213,6 +221,10 @@
         <option value="$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py" />
         <option value="$PROJECT_DIR$/bdmcore/dictionary/type.py" />
         <option value="$PROJECT_DIR$/bdmcore/dictionary/problemDefine.py" />
+        <option value="$PROJECT_DIR$/bdmcore/dictionary/datadict.py" />
+        <option value="$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py" />
+        <option value="$PROJECT_DIR$/bdmcore/dfs/method.py" />
+        <option value="$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py" />
       </list>
     </option>
   </component>
@@ -238,6 +250,12 @@
               <item name="ade" type="b2602c69:ProjectViewProjectNode" />
               <item name="ade" type="462c0819:PsiDirectoryNode" />
               <item name="bdmcore" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ade" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ade" type="462c0819:PsiDirectoryNode" />
+              <item name="bdmcore" type="462c0819:PsiDirectoryNode" />
+              <item name="clean_data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ade" type="b2602c69:ProjectViewProjectNode" />
@@ -415,46 +433,6 @@
     <entry file="file://$PROJECT_DIR$/bdmcore/clean_data/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/bdmcore/clean_data/clean.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="186" selection-start-line="186" selection-end-line="186" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6511">
-          <caret line="383" column="21" selection-start-line="383" selection-start-column="21" selection-end-line="383" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/method.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="79" selection-start-line="7" selection-start-column="79" selection-end-line="7" selection-end-column="79" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-493">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/temp/extract_features.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
@@ -587,16 +565,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bdmcore/encoder/label_encoder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -629,8 +597,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bdmcore/dictionary/datadict.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        <state relative-caret-position="-29">
+          <caret line="242" column="47" selection-start-line="242" selection-start-column="47" selection-end-line="242" selection-end-column="47" />
+          <folding>
+            <element signature="e#789#807#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bdmcore/encoder/hash_encoder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/transform_primitive.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="23" column="19" lean-forward="true" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bdmcore/dfs/aggregation_primitives.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="332" column="14" selection-start-line="332" selection-start-column="14" selection-end-line="332" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bdmcore/clean_data/clean.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="29" lean-forward="true" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

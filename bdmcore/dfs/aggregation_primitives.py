@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from scipy.stats import skew
 
 
-class Zero_count:
+class ZeroCount:
     """Count number of zero"""
     name = "zero_c"
     # input_types =  ['Numeric']

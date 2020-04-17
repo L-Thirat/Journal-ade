@@ -1,4 +1,4 @@
-'''
+"""
 Written by: Jah Chaisangmongkon
 
 datadict is a module in bdmcore package
@@ -22,12 +22,13 @@ Description for Specific Variable Types
 'Unique Values' : category names
 
 ### ID ###
-'''
+"""
 import numpy as np
 import pandas as pd
+from scipy.stats import skew
 
 
-class featureProperty():
+class FeatureProperty:
     order = 0
     title = ''
     description = ''
@@ -37,7 +38,7 @@ class featureProperty():
         return self.value
 
 
-class Type(featureProperty):
+class Type(FeatureProperty):
     order = 1
     title = 'Type'
     value = {}
@@ -47,10 +48,7 @@ class Type(featureProperty):
         return self.value
 
 
-from scipy.stats import skew
-
-
-class Skewness(featureProperty):
+class Skewness(FeatureProperty):
     order = 1000
     title = 'Skewness'
     value = {}
@@ -69,7 +67,7 @@ class Skewness(featureProperty):
         return self.value
 
 
-class Description(featureProperty):
+class Description(FeatureProperty):
     title = 'Description'
     order = 5
 
@@ -78,7 +76,7 @@ class Description(featureProperty):
         return self.value
 
 
-class NUniqueValues(featureProperty):
+class NUniqueValues(FeatureProperty):
     title = "N Unique Values"
     order = 3
 
@@ -87,7 +85,7 @@ class NUniqueValues(featureProperty):
         return self.value
 
 
-class RatioUniqueValues(featureProperty):
+class RatioUniqueValues(FeatureProperty):
     title = "Ratio Unique Values"
     order = 4
 
@@ -99,7 +97,7 @@ class RatioUniqueValues(featureProperty):
         return self.value
 
 
-class RatioMissingValues(featureProperty):
+class RatioMissingValues(FeatureProperty):
     title = 'Ratio Missing Values'
     order = 4
 
@@ -111,7 +109,7 @@ class RatioMissingValues(featureProperty):
         return self.value
 
 
-class PrimaryType(featureProperty):
+class PrimaryType(FeatureProperty):
     order = 2
     title = 'Primary Type'
     value = {}
@@ -135,10 +133,10 @@ class PrimaryType(featureProperty):
 
         # -->non-object
         temp_series_transform = pd.to_numeric(series, errors='coerce')
-        Count_NaN = float(temp_series_transform.isnull().sum()) / temp_series_transform.count()
+        count_nan = float(temp_series_transform.isnull().sum()) / temp_series_transform.count()
         if t == "bool":
             self.value = 'Boolean'
-        elif (t != "object") or ((Count_NaN < 0.2) and (temp_series_transform.count() != 0)):
+        elif (t != "object") or ((count_nan < 0.2) and (temp_series_transform.count() != 0)):
             if 'datetime64[ns]' in t:
                 self.value = 'Date/Time'
             elif 'float' in t:
@@ -188,7 +186,7 @@ class PrimaryType(featureProperty):
         return self.value
 
 
-class SecondaryType(featureProperty):
+class SecondaryType(FeatureProperty):
     title = 'Secondary Type'
     order = 1000
 
@@ -197,7 +195,7 @@ class SecondaryType(featureProperty):
         return self.value
 
 
-class ValueCounts(featureProperty):
+class ValueCounts(FeatureProperty):
     order = 1000
     title = 'Value Counts'
     value = {}
@@ -218,10 +216,10 @@ def characterize_column(series):
     Returns the following characteristics of the series:
 
     :param series: a column of pandas dataframe
-    :return: list of featureProperty objects
+    :return: list of FeatureProperty objects
     """
 
-    all_props = [cls.__name__ for cls in globals()['featureProperty'].__subclasses__()]
+    all_props = [cls.__name__ for cls in globals()['FeatureProperty'].__subclasses__()]
     lis = []
     for prop in all_props:
         constructor = globals()[prop]
@@ -237,15 +235,12 @@ def characterize_table(table):
     """
     This function simply run characterize_feature function for all columns in a table
     :param table:
-    :return: python dictionary with column name & list of featureProperty objects
+    :return: python dictionary with column name & list of FeatureProperty objects
     """
     col_names = table.columns
     lis = []
     for name in col_names:
         prop = characterize_column(table[name])
-        index_prop = [x[0] for x in prop]
-        prop_df = [x[1:] for x in map(tuple, prop)]
-        df = pd.DataFrame(data=prop_df, index=index_prop, columns=['Property Name', 'Property Value'])
         lis.append((name, prop))
     return lis
 

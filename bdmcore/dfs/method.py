@@ -41,7 +41,7 @@ def featuretools(new_df, df_dic, dic_type, deep, main_table, entity_dic, relatio
         es[file] = (df_dic[file], idx)
 
     for file in main_table:
-        print("Filename: ",file)
+        print("Filename: ", file)
         feature_matrix_customers, features_defs = ft.dfs(entities=es, relationships=relation_list, target_entity=file,
                                                          max_depth=deep)
         intersec_col = list(
