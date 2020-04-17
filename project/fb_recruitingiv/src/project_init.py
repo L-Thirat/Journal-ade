@@ -1,10 +1,10 @@
 import sys
 
 sys.path.append("/home/ubuntu/core")
-from bdmcore.dsproject import config
-from bdmcore.dsproject import metadata
-from bdmcore.dsproject import redshift_connector
-from bdmcore.dsproject import logger
+from bdmcore.dsproject import Config
+from bdmcore.dsproject import Metadata
+from bdmcore.dsproject import RedshiftConnector
+from bdmcore.dsproject import Logger
 
 from bdmcore import d_type
 from bdmcore import preprocess
@@ -38,10 +38,10 @@ feature_selection.setup(set_val)
 
 # Config
 bucket_name = "fb-RecruitingIV"
-conf = config(ProjectName)
-redshif = redshift_connector(config=conf)
-metadata = metadata(conf, redshif)
-logger_info = logger(ProjectName, conf)
+conf = Config(ProjectName)
+redshif = RedshiftConnector(config=conf)
+metadata = Metadata(conf, redshif)
+logger_info = Logger(ProjectName, conf)
 reds_columns = ['tablename', 'column', 'type']
 
 # Src Run
