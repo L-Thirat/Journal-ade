@@ -47,6 +47,8 @@ reds_columns = ['tablename', 'column', 'type']
 # Src Run
 # Preprocess
 df_dic = {}
+df_meta = None
+old_construct = None
 logger_info.write("-->PREPROCESS")
 if dtype_routine == "adm":
     for origin_file in data_files:
@@ -74,8 +76,10 @@ if dtype_routine == "adm":
 if sv_test:
     del df_dic
     df_dic = {}
-del df_meta
-del old_construct
+if df_meta:
+    del df_meta
+if old_construct:
+    del old_construct
 
 # FEATURE EXTRACTION
 logger_info.write("-->FEATURE EXTRACTION")
@@ -106,6 +110,7 @@ new_df = feature_extraction.merge(df_merge=df_dic[first_new_df_file], df_dic=df_
                                   mem_merge=list(data_files[0]))
 if sv_test:
     redshif.write(data_frame=new_df, routine_name="adm", table_name="merge", bucketname=bucket_name)  # todo for REAL !
+    original_df = None
 else:
     original_df = new_df.copy()
 
@@ -193,6 +198,8 @@ elif model == 'et':
     clf = ExtraTreesClassifier()
 elif model == 'xgb':
     clf = XGBClassifier(learning_rate=1.0)
+else:
+    raise Exception("No model: %s" % model)
 
 feat_selector = BorutaPy(clf, n_estimators=1000, verbose=2, random_state=1, alpha=0.00001, max_iter=200)
 new_df = feature_selection.run(df=new_df, method=feature_selection_routine, select_x=list(new_df.columns),

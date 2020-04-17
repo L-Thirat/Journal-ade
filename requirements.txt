@@ -16,3 +16,4 @@ xgboost
 featuretools
 IPython
 argparse
+numpy

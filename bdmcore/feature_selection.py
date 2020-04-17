@@ -1,11 +1,11 @@
+import numpy as np
+import logging
 from bdmcore.selection.method import boruta
 from bdmcore.selection.method import correlation
 from bdmcore.selection.method import fval
 from sklearn.preprocessing import LabelBinarizer
 from bdmcore import d_type
 from bdmcore import preprocess
-import numpy as np
-import logging
 
 
 def setup(zip_val=None):
