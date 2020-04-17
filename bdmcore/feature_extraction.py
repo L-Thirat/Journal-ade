@@ -13,7 +13,7 @@ def setup(gb_dic_type, gb_entity_dic=None, gb_relation_table=None, zip_val=None,
     :param gb_relation_table: relation table
     :param zip_val: master id and label
     :param gb_test_mode: True [if run with testing], False [if run with training]
-    :return:
+    :return: None
     """
     if gb_test_mode is None:
         gb_test_mode = {}
@@ -85,7 +85,7 @@ def merge(df_merge, df_dic, relation_table, target_table, main_tables, mem_merge
     :param target_table: target table name
     :param main_tables: main table name
     :param mem_merge: table name merged
-    :return:
+    :return: dataframe merged
     """
     # TODO Auto merge from relation_table, target_table, mem_merge ?
     fw_files = main_tables[1:]
@@ -104,7 +104,7 @@ def run(new_df, df_dic, method, main_tables, deep=4):
     :param method: feature selection method
     :param main_tables: main table name
     :param deep: deep layer
-    :return:
+    :return: dataframe generated
     """
     if method == "adm_extract":
         new_df = adm(new_df, df_dic, dic_type, main_tables, ent_dic, set_val, test_mode)
