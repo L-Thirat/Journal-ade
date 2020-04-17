@@ -3,8 +3,8 @@ import string
 from dateutil.parser import parse
 
 
-class characterizer:
-    """characterizer
+class Characterizer:
+    """Characterizer
 
     """
     def __init__(self, name, data_type, function):
@@ -21,11 +21,12 @@ class characterizer:
         return self.function(series)
 
 
-class converter(characterizer):
-    """converter
+class Converter(Characterizer):
+    """Converter
 
     """
-    def __init__(self):
+    def __init__(self, name, data_type, function):
+        super().__init__(name, data_type, function)
         self.data_digit = ""
         self.data_character = ""
         self.data_date = ""
@@ -135,9 +136,9 @@ class converter(characterizer):
         :return: check result
         """
         self.data_specialchar = ""
-        invalidChars = set(string.punctuation.replace("_", ""))
+        invalid_chars = set(string.punctuation.replace("_", ""))
 
-        if any(char in invalidChars for char in data):
+        if any(char in invalid_chars for char in data):
             self.data_specialchar = True
         else:
             self.data_specialchar = False
@@ -230,11 +231,11 @@ class converter(characterizer):
         :param data: data
         :return: counting result
         """
-        invalidChars = set(string.punctuation.replace("_", ""))
+        invalid_chars = set(string.punctuation.replace("_", ""))
         count = 0
 
         for i in data:
-            if i in invalidChars:
+            if i in invalid_chars:
                 count += 1
 
         return count
@@ -330,7 +331,7 @@ class converter(characterizer):
         return self.data_digitplus
 
 
-class numeric:
+class Numeric:
     """list of numerical function
 
     """
@@ -372,7 +373,7 @@ class numeric:
         return np.std(data)
 
 
-class boolean:
+class Boolean:
     """list of boolean function
 
     """
@@ -446,8 +447,8 @@ class boolean:
 
 
 # -------------------- general function -----------------------------
-n_unique_value_ch = characterizer('n_unique_value', 'general', lambda s: len(s.value_counts()))
-data_number_ch = characterizer('data_number', 'general', lambda s: len(s))
+n_unique_value_ch = Characterizer('n_unique_value', 'general', lambda s: len(s.value_counts()))
+data_number_ch = Characterizer('data_number', 'general', lambda s: len(s))
 
 
 def data_sample(data):
@@ -467,7 +468,7 @@ def data_sample(data):
     return value_top
 
 
-data_sample_ch = characterizer('data_sample', 'general', data_sample)
+data_sample_ch = Characterizer('data_sample', 'general', data_sample)
 
 
 # percentage null data
@@ -489,22 +490,22 @@ def percent_missing_value(data):
     return percent_missing_value
 
 
-percent_missing_value_ch = characterizer('percent_missing_value', 'general', percent_missing_value)
+percent_missing_value_ch = Characterizer('percent_missing_value', 'general', percent_missing_value)
 
 # -----------------------numarical function---------------------------
-mean_ch = characterizer('mean', 'numeric', lambda s: s.mean())
-std_ch = characterizer('std', 'numeric', lambda s: s.std())
-median_ch = characterizer('median', 'numeric', lambda s: s.median())
-mode_ch = characterizer('mode', 'numeric', lambda s: s.mode()[0])
-percentile_25_percent_ch = characterizer('percentile25%', 'numeric', lambda s: s.quantile(.25))
-percentile_75_percent_ch = characterizer('percentile75%', 'numeric', lambda s: s.quantile(.75))
-kurtosis_ch = characterizer('kurtosis', 'numeric', lambda s: s.kurt())
-numeric_min_ch = characterizer('numaric_min', 'numeric', lambda s: s.min())
-numeric_max_ch = characterizer('numaric_max', 'numeric', lambda s: s.max())
+mean_ch = Characterizer('mean', 'numeric', lambda s: s.mean())
+std_ch = Characterizer('std', 'numeric', lambda s: s.std())
+median_ch = Characterizer('median', 'numeric', lambda s: s.median())
+mode_ch = Characterizer('mode', 'numeric', lambda s: s.mode()[0])
+percentile_25_percent_ch = Characterizer('percentile25%', 'numeric', lambda s: s.quantile(.25))
+percentile_75_percent_ch = Characterizer('percentile75%', 'numeric', lambda s: s.quantile(.75))
+kurtosis_ch = Characterizer('kurtosis', 'numeric', lambda s: s.kurt())
+numeric_min_ch = Characterizer('numaric_min', 'numeric', lambda s: s.min())
+numeric_max_ch = Characterizer('numaric_max', 'numeric', lambda s: s.max())
 
 # ----------------------datetime function-------------------------------
-datetime_min_ch = characterizer('datetime_min', 'datetime', lambda s: s.min())
-datetime_max_ch = characterizer('datetime_max', 'datetime', lambda s: s.max())
+datetime_min_ch = Characterizer('datetime_min', 'datetime', lambda s: s.min())
+datetime_max_ch = Characterizer('datetime_max', 'datetime', lambda s: s.max())
 
 
 # ----------------------categoric function-------------------------------
@@ -580,10 +581,10 @@ def freq_bottom_5(data):
     return freq_bottom_5
 
 
-top_5_ch = characterizer('top_5', 'categoric', top_5)
-freq_top_5_ch = characterizer('freq_top_5', 'categoric', freq_top_5)
-bottom_5_ch = characterizer('bottom_5', 'categoric', bottom_5)
-freq_bottom_5_ch = characterizer('freq_bottom_5', 'categoric', freq_bottom_5)
+top_5_ch = Characterizer('top_5', 'categoric', top_5)
+freq_top_5_ch = Characterizer('freq_top_5', 'categoric', freq_top_5)
+bottom_5_ch = Characterizer('bottom_5', 'categoric', bottom_5)
+freq_bottom_5_ch = Characterizer('freq_bottom_5', 'categoric', freq_bottom_5)
 
 
 def all_unique(data):
@@ -600,7 +601,7 @@ def all_unique(data):
         return 0
 
 
-all_unique_ch = characterizer('all_unique', 'ID', all_unique)
+all_unique_ch = Characterizer('all_unique', 'ID', all_unique)
 
 
 def all_converter(data):
@@ -609,32 +610,32 @@ def all_converter(data):
     :param data: data
     :return: named attribute of object
     """
-    function_characterizer = dir(characterizer)
+    function_characterizer = dir(Characterizer)
     function_characterizer = [i for i in function_characterizer if "_" != i[0] and "_" != i[1] in i]
-    function_converter = dir(converter)
+    function_converter = dir(Converter)
     function_converter = [i for i in function_converter if "_" != i[0] and "_" != i[1] in i]
     function_converter = list(set(function_converter) - set(function_characterizer))
-    function_numeric = dir(numeric)
+    function_numeric = dir(Numeric)
     function_numeric = [i for i in function_numeric if "_" != i[0] and "_" != i[1] in i]
-    function_boolean = dir(boolean)
+    function_boolean = dir(Boolean)
     function_boolean = [i for i in function_boolean if "_" != i[0] and "_" != i[1] in i]
 
     att = {}
 
     for x in range(0, len(function_converter)):
-        result = data.apply(getattr(converter(), function_converter[x]))
+        result = data.apply(getattr(Converter(), function_converter[x]))
 
         # Check Type
         # Boolean
         if result[0].dtype == bool:
             for booleans in function_boolean:
-                att[booleans + "-" + function_converter[x]] = getattr(boolean(), booleans)(result)
+                att[booleans + "-" + function_converter[x]] = getattr(Boolean(), booleans)(result)
         # Numeric
         else:
             for numerics in function_numeric:
-                att[numerics + "-" + function_converter[x]] = getattr(numeric(), numerics)(result)
+                att[numerics + "-" + function_converter[x]] = getattr(Numeric(), numerics)(result)
 
     return att
 
 
-all_converter_ch = characterizer('all_converter', 'general', all_converter)
+all_converter_ch = Characterizer('all_converter', 'general', all_converter)

@@ -31,7 +31,7 @@ def entity_discovery(data_tables):
         if len(data_tables) < 2:
             for col in list(tab.columns):
                 n = RatioUniqueValues().characterize(tab[col])
-                if (n == 1.0):
+                if n == 1.0:
                     intersect_col.append(col)
         else:
             for col in list(tab.columns):
@@ -43,7 +43,7 @@ def entity_discovery(data_tables):
     for tab_name, tab in data_tables.items():
         for column_name in tab.columns:
             n = RatioUniqueValues().characterize(tab[column_name])
-            if (column_name in intersect_col):
+            if column_name in intersect_col:
                 if (n == 1.0) and (1 not in list(entity[tab_name]['main entity'])):
                     entity[tab_name]['main entity'].loc[column_name] = 1
                 else:
@@ -118,7 +118,6 @@ def find_main_id(entity):
 
 def find_main_table(entity_dic, master_id):
     """Find Main Table"""
-    sort_table = {}
     main_tables = []
     for file in entity_dic:
         if list(set(entity_dic[file][entity_dic[file]["main entity"] == 1]['column']) & set(master_id)):

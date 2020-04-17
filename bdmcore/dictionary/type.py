@@ -5,13 +5,12 @@ import logging
 
 def declare_data_type(df, drop_text):
     """Confirm data type"""
-    data_types = {}
-    data_types['Numeric'] = []
-    data_types['Boolean'] = []
-    data_types['ID'] = []
-    data_types['Categorical'] = []
-    data_types['Date/Time'] = []
-    data_types['Text'] = []
+    data_types = {'Numeric': [],
+                  'Boolean': [],
+                  'ID': [],
+                  'Categorical': [],
+                  'Date/Time': [],
+                  'Text': []}
     df_datatype = pd.DataFrame(columns=['column', 'datatype'])
     for col in list(df.columns):
         find_dt = PrimaryType().characterize(series=df[col])
@@ -33,14 +32,14 @@ def declare_data_type(df, drop_text):
 
 def declare_variable_type(df):
     """Confirm variable type"""
-    variable_types = {}
-    variable_types['uint8'] = []
-    variable_types['int32'] = []
-    variable_types['int64'] = []
-    variable_types['float64'] = []
-    variable_types['object'] = []
-    variable_types['bool'] = []
-    variable_types['datetime64[ns]'] = []
+    variable_types = {'uint8': [],
+                      'int32': [],
+                      'int64': [],
+                      'float64': [],
+                      'object': [],
+                      'bool': [],
+                      'datetime64[ns]': []
+                      }
     df_variable = pd.DataFrame(columns=['column', 'variabletype'])
     for col in list(df.columns):
         if (str(df[col].dtype) == 'int32') or (str(df[col].dtype) == 'uint8'):

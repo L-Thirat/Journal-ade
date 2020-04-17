@@ -3,7 +3,7 @@ import os
 import sys
 import metadata_routines
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine
 import pandas as pd
 import logging
 import logging.config
@@ -16,7 +16,7 @@ from pandas.io.sql import SQLTable, pandasSQL_builder
 from io import StringIO, BytesIO
 import gzip
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT  # <-- ADD THIS LINE
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import numpy as np
 import inspect
 import traceback
@@ -28,12 +28,15 @@ class Config:
         self.project_name = project_name
         self.database_name = project_name
         self.config = self.setting()
+        self.data_files = []
+        self.master_id = ""
+        self.label = ""
 
     def setting(self):
-        '''
-        Setting up config file
+        """Setting up config file
+
         :return: config object
-        '''
+        """
         home_path = os.path.dirname(os.path.dirname(os.path.realpath('__file__')))
         s3_path = 's3://' + self.project_name
         user = '<username>'
@@ -52,10 +55,23 @@ class Config:
         return config
 
     def get(self, section, param):
+        """Get config
+
+        :param section: section
+        :param param: parameter
+        :return: config
+        """
         config = self.config.get(section, param)
         return config
 
     def prediction_setting(self, data_files, master_id, label):
+        """Prediction setting
+
+        :param data_files: file names
+        :param master_id: main id
+        :param label: label
+        :return: None
+        """
         self.data_files = data_files
         self.master_id = master_id
         self.label = label
@@ -68,10 +84,16 @@ class Logger:
         self.name = name
         self.setup_logging(config)
         self.logger = logging.getLogger(name)
+        self.log_path = ""
+        self.home_path = ""
 
     def setup_logging(self, config):
-        """Logging setup"""
-        if config != None:
+        """Logging setup
+
+        :param config: log config
+        :return None
+        """
+        if config is not None:
             self.log_path = config.get('PATH', 'log_path')
             self.home_path = config.get('PATH', 'home_path')
             logging_config_path = os.path.join(os.path.dirname(os.path.dirname(self.home_path)), 'bdmcore/logging.json')
@@ -115,7 +137,12 @@ class Logger:
             logger.addHandler(fh)
 
     def write(self, message=None, log_type=None):
-        """Write log"""
+        """Write log
+
+        :param message: message
+        :param log_type: log type
+        :return: None
+        """
         if (log_type == 'info') | (log_type is None):
             self.logger.info(message)
         elif log_type == 'debug':
@@ -128,7 +155,9 @@ class Logger:
             self.logger.critical(message)
 
     def read(self):
-        """Read log"""
+        """Read log
+
+        """
         list_of_files = glob.glob(os.path.join(self.log_path, '*'))
         latest_file = max(list_of_files, key=os.path.getctime)
         with open(latest_file) as f:
@@ -145,12 +174,20 @@ class RedshiftConnector:
         self.s3_path = config.get('PATH', 's3_path')
         self.redshift_path = config.get('PATH', 'redshift_path')
         self.engine = create_engine(self.redshift_path)
+        self.bucket = ""
         # todo add project_name to connector
 
     def read(self, table_name, routine_name=None, sub_routine=None, **kwarg):
-        if ((sub_routine == None) & (routine_name != None)):
+        """Read data table
+
+        :param table_name: table name
+        :param routine_name: routine name
+        :param sub_routine: sub routine
+        :return: None
+        """
+        if (sub_routine is None) & (routine_name is not None):
             table_name = routine_name + '/' + table_name
-        elif ((sub_routine == None) & (routine_name == None)):
+        elif (sub_routine is None) & (routine_name is not None):
             table_name = table_name
         else:
             table_name = routine_name + '/' + sub_routine + '/' + table_name
@@ -159,17 +196,26 @@ class RedshiftConnector:
         logging.info('Reading table {} :'.format(table_name))
         return df
 
-    def write(self, data_frame, routine_name, table_name, bucketname=None, if_exists='replace', sub_routine=None,
-              **kwarg):
+    def write(self, data_frame, routine_name, table_name, bucketname=None, if_exists='replace', sub_routine=None):
+        """Write data table
+
+        :param data_frame: dataframe
+        :param routine_name: routine name
+        :param table_name: table name
+        :param bucketname: bucket name
+        :param if_exists: method if exists
+        :param sub_routine: sub routine
+        :return: None
+        """
         # todo this function is pretty verbose as it is, please use logger instead of print
         # todo make sure log statement is understandable for outside observer
         # todo bucketname should always be project_name, redshift should know its own project_name
         # todo when table is new, write metadata, but give an option to skip metadata
 
         self.bucket = bucketname
-        if (table_name != 'meta_database') & (sub_routine == None):
+        if (table_name != 'meta_database') & (sub_routine is None):
             table_name = routine_name + '/' + table_name
-        elif (table_name == 'meta_database') & (sub_routine == None):
+        elif (table_name == 'meta_database') & (sub_routine is None):
             table_name = table_name
         else:
             table_name = routine_name + '/' + sub_routine + '/' + table_name
@@ -178,10 +224,9 @@ class RedshiftConnector:
 
         s3 = boto3.resource('s3')
         bucket = s3.Bucket(bucketname)
-        obj = s3.Object(bucket_name=bucket, key='/')
 
         con = psycopg2.connect(self.redshift_path)
-        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)  # <-- ADD THIS LINE
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
         # write DF to string stream
@@ -253,6 +298,13 @@ class RedshiftConnector:
         logging.info('\n--------------- write already -----------------')
 
     def delete(self, table_name, routine_name=None, sub_routine=None):
+        """Delete meta data and data table
+
+        :param table_name: table name
+        :param routine_name: routine name
+        :param sub_routine: sub routine name
+        :return:
+        """
         if (sub_routine is None) & (routine_name is not None):
             table_name = routine_name + '/' + table_name
         elif (sub_routine is None) & (routine_name is not None):
@@ -260,8 +312,8 @@ class RedshiftConnector:
         else:
             table_name = routine_name + '/' + sub_routine + '/' + table_name
 
-        redshift_mysql_statement = """ DROP TABLE "%s" """ % (table_name)
-        meta_mysql_statement = """ DELETE FROM meta_database WHERE tablename='%s' """ % (table_name)
+        redshift_mysql_statement = """ DROP TABLE "%s" """ % table_name
+        meta_mysql_statement = """ DELETE FROM meta_database WHERE tablename='%s' """ % table_name
         con = psycopg2.connect(self.redshift_path)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)  # <-- ADD THIS LINE
         cur = con.cursor()
@@ -279,6 +331,9 @@ class Metadata:
         self.setup_meta()
 
     def setup_meta(self):
+        """setup meta data
+
+        """
         mysql_statement = """                         
                            CREATE TABLE IF NOT EXISTS meta_database( 
                                 tablename varchar(255), 
@@ -310,7 +365,6 @@ class Metadata:
 
         :return: table_list in dataframe format
         """
-
         statement = "select distinct(tablename) from pg_table_def where schemaname = 'public' and tablename != 'meta_" \
                     "database' ;"
         table_list = pd.read_sql(statement, self.redshift_connector.engine)
@@ -324,6 +378,11 @@ class Metadata:
         return table_list
 
     def read(self, routine_name=None):
+        """Read meta data
+
+        :param routine_name: routine name
+        :return: None
+        """
         if routine_name is None:
             statement = "select * from meta_database"
         else:
@@ -331,12 +390,12 @@ class Metadata:
         meta_data = pd.read_sql(statement, self.redshift_connector.engine)
         return meta_data
 
-    def write(self, df, routine_name, table_name, sub_routine=None):
+    def write(self, df):
+        """Write meta data from dataframe
 
-        if sub_routine is None:
-            table_name = routine_name + '/' + table_name
-        else:
-            table_name = routine_name + '/' + sub_routine + '/' + table_name
+        :param df: dataframe
+        :return: None
+        """
 
         statement = "select * from meta_database;"
         meta_data = pd.read_sql(statement, self.redshift_connector.engine)
@@ -350,13 +409,21 @@ class Metadata:
                                       bucketname=self.redshift_connector.bucket)
 
     def construct(self, routine_name, table_name, sub_routine=None):
+        """Construct meta data
+
+        :param routine_name: routine name
+        :param table_name: table name
+        :param sub_routine: sub routine
+        :return: meta data updated
+        """
         if sub_routine is None:
             table_name = routine_name + '/' + table_name
         else:
             table_name = routine_name + '/' + sub_routine + '/' + table_name
 
         statement = "select pg_table_def.tablename, pg_table_def.column, pg_table_def.type \
-                     from pg_table_def where pg_table_def.schemaname = 'public' and pg_table_def.tablename = '" + table_name + "' ;"
+                     from pg_table_def where pg_table_def.schemaname = 'public' and pg_table_def.tablename = '" + \
+                    table_name + "' ;"
         raw_meta_data = pd.read_sql(statement, self.redshift_connector.engine)
 
         if raw_meta_data.empty:
@@ -383,6 +450,10 @@ class Metadata:
 
     @staticmethod
     def list_routines():
+        """Show routines
+
+        :return: routines
+        """
         all_functions = inspect.getmembers(metadata_routines, inspect.isfunction)
         routines = []
         for function_name, function in all_functions:
@@ -390,6 +461,12 @@ class Metadata:
         return routines
 
     def exist(self, table_name, field_name=None):
+        """Check table exists
+
+        :param table_name: table name
+        :param field_name: field name
+        :return: routines
+        """
         routines = []
         if field_name is None:
             statement = " select * from meta_database where tablename like '%%" + table_name + "' ;"
@@ -410,7 +487,15 @@ class S3Connector:
         self.bucket = bucket_name
 
     def save_csv_file(self, data_frame, routine_name, file_name, sub_routine=None, **kwarg):
-        """Write csv"""
+        """Write csv
+
+        :param data_frame: dataframe
+        :param routine_name: routine name
+        :param file_name: file name
+        :param sub_routine: sub routine
+        :param kwarg: multiple keyword arguments in pandas
+        :return: None
+        """
         if sub_routine is None:
             key = 'output/' + routine_name + '/' + file_name + '.csv'
         else:
@@ -426,7 +511,14 @@ class S3Connector:
         bucket.put_object(Key=key, Body=csv_buffer.getvalue())
 
     def read_csv_file(self, folder_name, file_name, sub_routine=None, **kwarg):
-        """Read csv"""
+        """Read csv
+
+        :param folder_name: folder name
+        :param file_name: file name
+        :param sub_routine: sub routine
+        :param kwarg: multiple keyword arguments in pandas
+        :return: dataframe
+        """
         if sub_routine is None:
             key = folder_name + '/' + file_name + '.csv'
         else:
