@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append("/home/ubuntu/core")
-
 from bdmcore.dsproject import Config
 from bdmcore.dsproject import Metadata
 from bdmcore.dsproject import RedshiftConnector

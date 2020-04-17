@@ -1,19 +1,13 @@
-import sys
-
-sys.path.append("/home/ubuntu/core")
+import pandas as pd
 from bdmcore.dsproject import Config
 from bdmcore.dsproject import Metadata
 from bdmcore.dsproject import RedshiftConnector
 from bdmcore.dsproject import Logger
-
 from bdmcore import d_type
 from bdmcore import preprocess
 from bdmcore import feature_extraction
 from bdmcore import feature_selection
-
 from bdmcore.dictionary.problemDefine import find_main_table
-
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC
 from boruta import BorutaPy
@@ -22,8 +16,8 @@ from xgboost import XGBClassifier
 
 # Local-Sv setting
 sv_test = False
-# False = test mode, True = train mode
-test_mode = False
+# test data table mapping
+test_mode = {}
 
 # Project setting
 ProjectName = "fb_recruitingiv"
@@ -56,7 +50,7 @@ if dtype_routine == "adm":
         file = "pre_" + origin_file
         df_dic[file] = redshif.read(origin_file)
         df_dic[file] = preprocess.process_nan(df_dic[file])
-        df_dic[file], variable_types, data_types = d_type.run(df_dic[file], method=dtype_routine)
+        df_dic[file], _, data_types = d_type.run(df_dic[file], method=dtype_routine)
         df_dic[file] = preprocess.process_tranform(df_dic[file], data_types)
         df_dic[file], variable_types, data_types = d_type.run(df_dic[file], method=dtype_routine)
         df_meta = pd.merge(variable_types, data_types, on=["column"])
@@ -71,7 +65,7 @@ if dtype_routine == "adm":
             old_construct = metadata.construct(routine_name=dtype_routine, table_name=file)
             old_construct = pd.merge(old_construct[reds_columns], df_meta, how="left", on=["tablename", "column"])
             logger_info.write("Writing meta data:(%s)... " % file)
-            metadata.write(old_construct, routine_name=dtype_routine, table_name=file)
+            metadata.write(old_construct)
 
 if sv_test:
     del df_dic
@@ -90,7 +84,9 @@ for file in data_files:
     logger_info.write("Reading Data:(%s)..." % file)
     if sv_test:
         if test_mode:
-            train_file = reds_columns[file]
+            temp = file.replace("pre_", "")
+            train_file = "pre_%s" % test_mode[temp]
+            train_file = train_file.lower()
         else:
             train_file = file
         df_dic[file] = redshif.read(table_name=train_file, routine_name=dtype_routine)
@@ -134,6 +130,7 @@ for file in df_dic:
 # Extract Feature
 feature_extraction.setup(dic_type, entity_dic, relation_table, set_val)
 for i, method in enumerate(feature_extraction_routine):
+    file = ""
     if i > 0:
         file = "feat_%s" % feature_extraction_routine[i - 1]
         logger_info.write("Reading Data:(%s)..." % file)
@@ -154,7 +151,7 @@ for i, method in enumerate(feature_extraction_routine):
     new_df_file = "feat_%s" % (feature_extraction_routine[i])
     logger_info.write("Update features...")
     new_df = preprocess.process_nan(new_df)
-    new_df, variable_types, data_types = d_type.run(new_df, method=dtype_routine)
+    new_df, _, data_types = d_type.run(new_df, method=dtype_routine)
     new_df = preprocess.process_tranform(new_df, data_types)
     new_df, variable_types, data_types = d_type.run(new_df, method=dtype_routine)
     df_meta = pd.merge(variable_types, data_types, on=["column"])
@@ -174,7 +171,7 @@ for i, method in enumerate(feature_extraction_routine):
     old_construct = pd.merge(old_construct[reds_columns], df_meta, how="left", on=["tablename", "column"])
     logger_info.write("Writing meta data:(%s)... " % new_df_file)
     logger_info.write(old_construct)
-    metadata.write(old_construct, routine_name=method, table_name=new_df_file)
+    metadata.write(old_construct)
 
     if sv_test:
         del new_df
