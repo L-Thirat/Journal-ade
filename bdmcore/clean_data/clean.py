@@ -18,7 +18,15 @@ def fillnan(df,
             replace_bool="MODE",
             replace_date="NAN",
             replace_object="NAN"):
-    """Fill nan to dataframe"""
+    """fill nan in dataframe
+
+    :param df: dataframe
+    :param replace_numeric: replace value for numerical data
+    :param replace_bool: replace value for boolean data
+    :param replace_date: replace value for date data
+    :param replace_object: replace value for object data
+    :return: dataframe
+    """
     for col in df:
         nunique = df[df[col].notnull()][col].value_counts().count()
         if nunique == 1:
@@ -54,7 +62,13 @@ def fillnan(df,
 
 
 def transform_datetime(df, col_datetime, fn_tf_date=None):
-    """Extract DateTime data"""
+    """Extract DateTime data
+
+    :param df: dataframe
+    :param col_datetime: datetime columns
+    :param fn_tf_date: transformation function of datetime feature
+    :return: dataframe
+    """
     if fn_tf_date is None:
         fn_tf_date = [tp.Day(), tp.Month(), tp.Weekday(), tp.Weekend(), tp.Year(), tp.Week()]
     for func in fn_tf_date:
@@ -68,7 +82,12 @@ def transform_datetime(df, col_datetime, fn_tf_date=None):
 
 
 def tranform_boolean(df, col_boolean):
-    """Extract Boolean data"""
+    """Extract Boolean data
+
+    :param df: dataframe
+    :param col_boolean: boolean column
+    :return: dataframe
+    """
     for col in col_boolean:
         if df[col].dtype != bool:
             set_col = list(set(df[col].dropna()))
@@ -93,7 +112,17 @@ def pre_selection(df, data_types,
                   bool_encoder=False,
                   drop_datetime=False,
                   cat_encoder="label"):
-    """Select feature on Preprocessing based"""
+    """Select feature on Preprocessing based
+
+    :param df: dataframe
+    :param data_types: data types
+    :param numeric_encoder: True [to use encoder for numerical data], False [if not]
+    :param skew_encoder: True [to use encoder for skew data], False [if not]
+    :param bool_encoder: True [to use encoder for boolean data], False [if not]
+    :param drop_datetime: True [to drop datetime features], False [if not]
+    :param cat_encoder: True [to use encoder for categorical data], False [if not]
+    :return: dataframe
+    """
     logging.info("len dataframe : {}".format(len(df)))
     if numeric_encoder:
         logging.info("Processing: Numeric Scaling")
@@ -154,7 +183,16 @@ def pre_selection(df, data_types,
 
 def delete_similar_column(df, na_mode=None, drop_val_col=False, drop_duplicate=False, drop_duplicate_col=False,
                           drop_same_between=False):
-    """Drop Nan & Similar Column value"""
+    """Drop Nan & Similar Column value
+
+    :param df: dataframe
+    :param na_mode: drop nan method
+    :param drop_val_col: True [to drop single value column], False [if not]
+    :param drop_duplicate: True [to drop duplicate column by row], False [if not]
+    :param drop_duplicate_col: True [to drop duplicate column by column], False [if not]
+    :param drop_same_between: True [to drop column which have single value row], False [if not]
+    :return: dataframe
+    """
     logging.info('Before resize {}'.format(df.shape))
     origin_col = list(df.columns)
     if na_mode == 'all':
@@ -167,7 +205,7 @@ def delete_similar_column(df, na_mode=None, drop_val_col=False, drop_duplicate=F
     elif None:
         pass
 
-    # Drop same value in column
+    # Drop single column
     if drop_val_col:
         logging.info("drop_val_col : ")
         logging.info(str(df.std()[(df.std() == 0)].index))

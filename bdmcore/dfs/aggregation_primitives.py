@@ -14,6 +14,10 @@ class Zero_count:
 
     @staticmethod
     def get_function():
+        """generate zero count function
+
+        :return: zero count function
+        """
         def zero_count(x):
             return (len(list(x)) - np.count_nonzero(x.values))/len(list(x))
         return zero_count
@@ -31,6 +35,10 @@ class Count:
         self.count_null = count_null
 
     def get_function(self):
+        """generate nan count function
+
+        :return: nan count function
+        """
         def func(values, count_null=self.count_null):
             if len(values) == 0:
                 return 0
@@ -51,6 +59,10 @@ class Sum:
 
     @staticmethod
     def get_function():
+        """generate aggregate sum function
+
+        :return: aggregate sum function
+        """
         def sum_func(x):
             return np.nan_to_num(x.values).sum(dtype=np.float)
         return sum_func
@@ -64,6 +76,10 @@ class Mean:
 
     @staticmethod
     def get_function():
+        """generate aggregate mean function
+
+        :return: aggregate mean function
+        """
         return np.nanmean
 
 
@@ -75,6 +91,10 @@ class Mode:
 
     @staticmethod
     def get_function():
+        """generate aggregate mode function
+
+        :return: aggregate mode function
+        """
         def pd_mode(x):
             if x.mode().shape[0] == 0:
                 return np.nan
@@ -92,6 +112,10 @@ class Min:
 
     @staticmethod
     def get_function():
+        """generate aggregate min function
+
+        :return: aggregate min function
+        """
         return np.min
 
 
@@ -105,6 +129,10 @@ class Max:
 
     @staticmethod
     def get_function():
+        """generate aggregate max function
+
+        :return: aggregate max function
+        """
         return np.max
 
 
@@ -118,6 +146,10 @@ class NUnique:
 
     @staticmethod
     def get_function():
+        """generate number of unique categorical count function
+
+        :return: number of unique categorical count function
+        """
         return lambda x: x.nunique()
 
 
@@ -132,6 +164,10 @@ class PercentTrue:
 
     @staticmethod
     def get_function():
+        """generate percent of true value calculate function
+
+        :return: percent of true value calculate function
+        """
         def percent_true(x):
             if len(x) == 0:
                 return np.nan
@@ -153,6 +189,10 @@ class AvgTimeBetween:
 
     @staticmethod
     def get_function():
+        """generate average time in range calculate function
+
+        :return: average time in range calculate function
+        """
         def pd_avg_time_between(x):
             x = x.dropna()
             x = pd.to_datetime(x)
@@ -172,6 +212,10 @@ class Median:
 
     @staticmethod
     def get_function():
+        """generate aggregate median function
+
+        :return: aggregate median function
+        """
         return np.median
 
 
@@ -191,6 +235,10 @@ class Skew:
 
     @staticmethod
     def get_function():
+        """generate aggregate skew function
+
+        :return: aggregate skew function
+        """
         return skew
 
 
@@ -204,6 +252,10 @@ class Std:
 
     @staticmethod
     def get_function():
+        """generate aggregate std function
+
+        :return: aggregate std function
+        """
         return np.nanstd
 
 
@@ -217,6 +269,10 @@ class Last:
 
     @staticmethod
     def get_function():
+        """generate finding last value function
+
+        :return: finding last value function
+        """
         def pd_last(x):
             return x.iloc[-1]
         return pd_last
@@ -231,6 +287,10 @@ class Any:
 
     @staticmethod
     def get_function():
+        """generate checking if any value is True function
+
+        :return: checking if any value is True function
+        """
         return np.any
 
 
@@ -243,6 +303,10 @@ class All:
 
     @staticmethod
     def get_function():
+        """generate checking if all value is True function
+
+        :return: checking if all value is True function
+        """
         return np.all
 
 
@@ -254,6 +318,10 @@ class Trend:
 
     @staticmethod
     def get_function():
+        """generate trend calculate function
+
+        :return: trend calculate function
+        """
         def pd_trend(y):
             df = (y.reset_index()).dropna()
             df.columns = ['x', 'y']
@@ -286,7 +354,11 @@ class Trend:
 
 
 def convert_datetime_to_floats(x):
-    """Convert datetime data to Numeric data"""
+    """Convert datetime data to Numeric data
+
+    :param x: data
+    :return data converted
+    """
     first = int(x.iloc[0].value * 1e-9)
     x = pd.to_numeric(x).astype(np.float64).values
     dividend = find_dividend_by_unit(first)
@@ -295,7 +367,11 @@ def convert_datetime_to_floats(x):
 
 
 def convert_timedelta_to_floats(x):
-    """Convert timedata data to Numeric data"""
+    """Convert timedata data to Numeric data
+
+    :param x: data
+    :return data converted
+    """
     first = int(x.iloc[0].total_seconds())
     dividend = find_dividend_by_unit(first)
     x = pd.TimedeltaIndex(x).total_seconds().astype(np.float64) / dividend
@@ -303,9 +379,10 @@ def convert_timedelta_to_floats(x):
 
 
 def find_dividend_by_unit(time):
-    """
-    Finds whether time best corresponds to a value in
-    days, hours, minutes, or seconds
+    """Finds whether time best corresponds to a value in days, hours, minutes, or seconds
+
+    :param time: time
+    :return range of time
     """
     for dividend in [86400., 3600., 60.]:
         div = time / dividend
