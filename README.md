@@ -5,3 +5,6 @@ We develop the autonomous data science tool to allow artificial intelligence to 
 ## Journal
 L. Thirat, C. Warasinee, Event-based Feature Synthesis: Autonomous Data Science Engine, Journal of Computers Vol. 30 No. 2, 2019, pp. 55-67\
 http://www.csroc.org.tw/journal/E_Published%20Vol_30_No_2.htm
+
+## Foundation
+Asahi Glass Scholarship Foundation(AGSF)
