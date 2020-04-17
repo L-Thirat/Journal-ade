@@ -14,6 +14,12 @@ log = logging.getLogger(__file__)
 
 
 def check_metadata(mdf, column_names):
+    """Check metadata exists
+
+    :param mdf: starting meta dataframe
+    :param column_names: column names
+    :return: True [if metadata exists], False [if not]
+    """
     exist = [column for column in column_names if column not in mdf.columns]
     log.info("Column {} missing from metadata".format(str(exist)))
 
@@ -30,8 +36,7 @@ def gen_linage(column_to_drop, routine_name, table_name):
 
 
 def base_cleaning(df, mdf, cardinal_thr=1, percent_missing_thr=80):
-    """
-    This function performs basic cleaning that every table should go through.
+    """This function performs basic cleaning that every table should go through.
 
     :param df: starting dataframe
     :param mdf: starting meta dataframe
@@ -62,8 +67,7 @@ def base_cleaning(df, mdf, cardinal_thr=1, percent_missing_thr=80):
 
 
 def frequent_value_domination(df, domination_thr=0.80):
-    """
-    Find columns which is over-dominated by frequent values.
+    """Find columns which is over-dominated by frequent values.
 
     :param df: input dataframe
     :param domination_thr: the maximum domination ratio allowed
