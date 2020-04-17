@@ -4,7 +4,12 @@ import logging
 
 
 def declare_data_type(df, drop_text):
-    """Confirm data type"""
+    """Confirm data type
+
+    :param df: datafeame
+    :param drop_text: column name of text data
+    :return dataframe preprocessed, variable types
+    """
     data_types = {'Numeric': [],
                   'Boolean': [],
                   'ID': [],
@@ -31,7 +36,11 @@ def declare_data_type(df, drop_text):
 
 
 def declare_variable_type(df):
-    """Confirm variable type"""
+    """Confirm variable type
+
+    :param df: datafeame
+    :return dataframe preprocessed, variable types
+    """
     variable_types = {'uint8': [],
                       'int32': [],
                       'int64': [],
@@ -53,7 +62,12 @@ def declare_variable_type(df):
 
 
 def check_true_float_int(df, variable_types):
-    """Confirm between float or int"""
+    """Confirm between float or int
+
+    :param df: datafeame
+    :param variable_types: variable types
+    :return dataframe
+    """
     for col in variable_types['float64']:
         try:
             df_new = (df[col].astype(int)).copy()
@@ -66,7 +80,12 @@ def check_true_float_int(df, variable_types):
 
 
 def check_true_object_float_int(df, variable_types):
-    """Confirm between float or object"""
+    """Confirm between float or object
+
+    :param df: datafeame
+    :param variable_types: variable types
+    :return dataframe
+    """
     for col in variable_types['object']:
         try:
             df[col] = df[col].astype(float)

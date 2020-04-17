@@ -20,7 +20,6 @@ def entity_discovery(data_tables):
     :param
     :return: entity dataframe, event dataframe
     """
-
     entity = {}
     temp_col = []
     intersect_col = []
@@ -75,7 +74,12 @@ def entity_discovery(data_tables):
 
 
 def data_relationship_discovery(data_tables, entity):
-    """Create relation table"""
+    """Create relation table
+
+    :param data_tables: data tables
+    :param entity: entity
+    :return: relation between tables, entity
+    """
     # initiate table relationship map
     data_files = data_tables.keys()
 
@@ -107,7 +111,11 @@ def data_relationship_discovery(data_tables, entity):
 
 
 def find_main_id(entity):
-    """Find Main ID which use to predict"""
+    """Find Main ID which use to predict
+
+    :param entity: entity
+    :return: main id
+    """
     # objective :: find main table that have main entity
     if 1 in list(entity["main entity"]):
         main_id = str(list(entity[entity["main entity"] == 1]['column']))[2:-2]
@@ -117,7 +125,12 @@ def find_main_id(entity):
 
 
 def find_main_table(entity_dic, master_id):
-    """Find Main Table"""
+    """Find Main Tables
+
+    :param entity_dic: entities
+    :param master_id: main id
+    :return: main tables
+    """
     main_tables = []
     for file in entity_dic:
         if list(set(entity_dic[file][entity_dic[file]["main entity"] == 1]['column']) & set(master_id)):
@@ -130,7 +143,12 @@ def find_main_table(entity_dic, master_id):
 
 
 def find_forward_backward(data_tables, entity_dic):
-    """Find relation between table"""
+    """Find relation between table
+
+    :param data_tables: dataset
+    :param entity_dic: entities
+    :return: correlation dataframe
+    """
     lst_file = list(data_tables.keys())
     df = pd.DataFrame(columns=lst_file, index=lst_file)
     df.index.name = 'file'

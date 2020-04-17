@@ -246,6 +246,11 @@ def characterize_table(table):
 
 
 def generate_feature_report(table):
+    """Create relation table
+
+    :param table: data tables
+    :return: relation between tables, entity
+    """
     # printing table head() 6 columns at a time
     h = table.head().to_string()
 
