@@ -22,9 +22,10 @@ from xgboost import XGBClassifier
 
 # Local-Sv setting
 sv_test = False
-# train-test
-test_mode = {}
+# False = test mode, True = train mode
+test_mode = False
 
+# Project setting
 ProjectName = "fb_recruitingiv"
 dtype_routine = "adm"
 feature_extraction_routine = ["adm_extract", "adm_math"]
@@ -185,14 +186,13 @@ if sv_test:
 # FEATURE SELECTION
 model = 'rf'
 if model == 'rf':
-    clf = RandomForestClassifier(n_jobs=-1, max_depth=60, n_estimators=100, class_weight='balanced', )  # ) #200
+    clf = RandomForestClassifier(n_jobs=-1, max_depth=60, n_estimators=100, class_weight='balanced', )
 elif model == 'ln':
     clf = LinearSVC(C=0.01, penalty="l1", dual=False)
 elif model == 'et':
     clf = ExtraTreesClassifier()
 elif model == 'xgb':
     clf = XGBClassifier(learning_rate=1.0)
-
 
 feat_selector = BorutaPy(clf, n_estimators=1000, verbose=2, random_state=1, alpha=0.00001, max_iter=200)
 new_df = feature_selection.run(df=new_df, method=feature_selection_routine, select_x=list(new_df.columns),
@@ -202,6 +202,8 @@ if sv_test:
 intersect_col = list(set(new_df.columns) & set(original_df.columns))
 new_df = new_df.drop(intersect_col, axis=1)
 new_df = pd.concat([original_df, new_df], axis=1)
+
+# Write selected features
 if sv_test:
     redshif.write(data_frame=new_df, routine_name=feature_selection_routine,
                   table_name="selected_%s" % feature_selection_routine, bucketname=bucket_name)

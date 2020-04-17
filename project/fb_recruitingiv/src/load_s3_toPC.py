@@ -25,6 +25,7 @@ metadata = metadata(conf,redshif)
 logger_info = logger(ProjectName,conf)
 reds_columns = ['tablename','column','type']
 
+# read data
 df = redshif.read("h_micro_bids_csv")
 df = redshif.read("h_train_csv")
 print(df.head())

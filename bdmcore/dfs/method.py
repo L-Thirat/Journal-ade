@@ -3,7 +3,6 @@ from bdmcore.dfs.extract_features import feature_math
 from bdmcore.dictionary.problemDefine import find_main_id
 from bdmcore.clean_data.clean import delete_similar_column
 import featuretools as ft
-import logging
 
 
 def adm(new_df, df_dic, dic_type, main_tables, entity_dic, set_val, test_mode):
@@ -22,14 +21,15 @@ def featuretools(new_df, df_dic, dic_type, deep, main_table, entity_dic, relatio
     ft.EntitySet(id="featuretools")
 
     relation_list = []
+    link_col = None
     for file in list(relation_table.columns):
         if "FW" in list(relation_table[file]):
             link_file = (list(relation_table[relation_table[file] == "FW"]["file"]))
             for lf in link_file:
                 if find_main_id(entity_dic[file]) in df_dic[lf]:
                     link_col = find_main_id(entity_dic[file])
-
-                relation_list.append((file, link_col, lf, link_col))
+                if link_col:
+                    relation_list.append((file, link_col, lf, link_col))
 
     es = {}
     for file in df_dic:
@@ -51,8 +51,6 @@ def featuretools(new_df, df_dic, dic_type, deep, main_table, entity_dic, relatio
         new_df = new_df.merge(df_write, how='left', on=intersec_col)
         new_df = delete_similar_column(new_df, drop_val_col=True, drop_duplicate_col=True)
 
-        logging.info(new_df.head(2))
-        logging.info("----------------------")
         print("shape new df ", new_df.shape)
 
     print(new_df.head(2))

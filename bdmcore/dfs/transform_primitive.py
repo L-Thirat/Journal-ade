@@ -129,9 +129,7 @@ class Weekday(DatetimeUnitBasePrimitive):
 
 
 class TimeSince():
-    """
-    For each value of the base feature, compute the timedelta between it and a datetime
-    """
+    """For each value of the base feature, compute the timedelta between it and a datetime"""
     name = "time_since"
     # input_types = [[DatetimeTimeIndex], [Datetime]]
     # return_type = Timedelta
@@ -146,9 +144,7 @@ class TimeSince():
 
 
 class DaysSince():
-    """
-    For each value of the base feature, compute the number of days between it and a datetime
-    """
+    """For each value of the base feature, compute the number of days between it and a datetime"""
     name = "days_since"
     # input_types = [DatetimeTimeIndex]
     # return_type = Numeric

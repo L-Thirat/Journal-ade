@@ -5,6 +5,11 @@ import ast
 from bdmcore.dfs import aggregation_primitives as ap
 from bdmcore.clean_data.clean import delete_similar_column
 from bdmcore import feature_selection
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import LinearSVC
+from boruta import BorutaPy
+from sklearn.ensemble import ExtraTreesClassifier
+from xgboost import XGBClassifier
 import logging
 
 __all__ = [
@@ -14,12 +19,6 @@ __all__ = [
 global k
 global model
 global feat_selector
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import LinearSVC
-from boruta import BorutaPy
-from sklearn.ensemble import ExtraTreesClassifier
-from xgboost import XGBClassifier
-
 
 # Modeling
 k = 300
@@ -41,7 +40,7 @@ def feature_groupby(new_df, df_dic, gb_dic_type, main_tables, gb_entity_dic, set
                     cat_fn=None,
                     bool_fn=None,
                     datetime_fn=None):
-    """Extract related function"""
+    """Extract aggregation features"""
     if datetime_fn is None:
         datetime_fn = [ap.AvgTimeBetween(), ap.Last()]
     if bool_fn is None:
@@ -107,23 +106,23 @@ def feature_groupby(new_df, df_dic, gb_dic_type, main_tables, gb_entity_dic, set
                                     column_other = list(set(cols_in_typ + intersect_col))
                                     new_df_origin = list(set(intersect_col + ls_groupby))
                                     if len(new_df_origin) != len(list(set(new_df[new_df_origin].columns))):
-                                        temp_other_df = new_df[new_df_origin].iloc[:,
-                                                        ~new_df[new_df_origin].columns.duplicated()]
+                                        temp_merge_df = new_df[new_df_origin].iloc[
+                                                        :, ~new_df[new_df_origin].columns.duplicated()]
                                     else:
-                                        temp_other_df = new_df[new_df_origin]
-                                    temp_other_df = pd.merge(temp_other_df, df_dic[other_file][column_other],
+                                        temp_merge_df = new_df[new_df_origin]
+                                    temp_merge_df = pd.merge(temp_merge_df, df_dic[other_file][column_other],
                                                              on=intersect_col, how='left')
                                     for col_sec in intersect_col:
                                         if col_sec not in ls_groupby:
-                                            temp_other_df = temp_other_df.drop(col_sec, axis=1)
+                                            temp_merge_df = temp_merge_df.drop(col_sec, axis=1)
                                 else:
                                     intersect_col = True
                                     cols_in_typ = dic_type[other_file][typ]
                                     cols_in_typ = list(set(cols_in_typ) & set(df_dic[other_file].columns))
                                     column_other = list(set(cols_in_typ + ls_groupby))
-                                    temp_other_df = new_df[column_other]
-                                if intersect_col and (len(list(temp_other_df.columns)) > len(ls_groupby)) and fn:
-                                    new_df = concat_feature(new_df=new_df, other_df=temp_other_df,
+                                    temp_merge_df = new_df[column_other]
+                                if intersect_col and (len(list(temp_merge_df.columns)) > len(ls_groupby)) and fn:
+                                    new_df = concat_feature(new_df=new_df, merge_df=temp_merge_df,
                                                             ls_groupby=ls_groupby, col_fn=column_fn, fn=fn)
                                     if len(list(new_df.columns)) != len(list(set(new_df.columns))):
                                         logging.info(new_df)
@@ -137,7 +136,8 @@ def feature_groupby(new_df, df_dic, gb_dic_type, main_tables, gb_entity_dic, set
                                                                                     select_x=newfeats_col,
                                                                                     threshold=0.65,
                                                                                     corr_k_pass=int(k / 5))
-                                            logging.info("shape after select by corr : %s" % str(selected_new_df.shape))
+                                            logging.info(
+                                                "shape after select by corr : %s" % str(selected_new_df.shape))
                                             new_df = pd.concat([new_df[original_col], selected_new_df], axis=1)
                                             if len(list(new_df.columns)) != len(list(set(new_df.columns))):
                                                 logging.info(new_df)
@@ -205,7 +205,7 @@ def feature_groupby(new_df, df_dic, gb_dic_type, main_tables, gb_entity_dic, set
 
 
 def feature_math(new_df, dic_type, test_mode):
-    """Extract Math function"""
+    """Extract Mathematics features"""
     temp_col = list(new_df.columns)
     original_col = temp_col
     logging.info("shape before extract math : %s" % str(new_df.shape))
@@ -214,7 +214,7 @@ def feature_math(new_df, dic_type, test_mode):
     logging.info("numeric features: ")
     logging.info(columns_numeric)
     if len(columns_numeric) > 1:
-        feat_list_pair = powerset(columns_numeric, i_len=2)
+        feat_list_pair = powerset(columns_numeric, group_lv=2)
         all_feat = len(feat_list_pair)
         for pair in feat_list_pair:
             now_no = feat_list_pair.index(pair) + 1
@@ -291,49 +291,69 @@ def feature_math(new_df, dic_type, test_mode):
     return new_df
 
 
-def powerset(iterable, i_len):
-    """Calculate powerset"""
+def powerset(iterable, group_lv):
+    """Calculate powerset
+
+    :param iterable: set of data
+    :param group_lv: number of grouping
+    :return column names
+    """
     iterable = sorted(iterable)
-    out_ls = []
-    if i_len == 1:
+    columns = []
+    if group_lv == 1:
         for col in iterable:
-            out_ls.append([col])
-    elif i_len == 2:
+            columns.append([col])
+    elif group_lv == 2:
         for i in range(0, len(iterable) - 1):
             for j in range(i + 1, len(iterable)):
-                out_ls.append([iterable[i], iterable[j]])
-    elif i_len == 3:
+                columns.append([iterable[i], iterable[j]])
+    elif group_lv == 3:
         for i in range(0, len(iterable) - 2):
             for j in range(i + 1, len(iterable) - 1):
-                for k in range(i + 2, len(iterable)):
-                    out_ls.append([iterable[i], iterable[j], iterable[k]])
-    return out_ls
+                for m in range(i + 2, len(iterable)):
+                    columns.append([iterable[i], iterable[j], iterable[m]])
+    return columns
 
 
-def concat_feature(new_df, other_df,
+def concat_feature(new_df, merge_df,
                    ls_groupby, col_fn, fn):
-    """Concat dataframe"""
+    """Concat dataframe
+
+    :param new_df: main dataframe
+    :param merge_df: merge dataframe
+    :param ls_groupby: columns which use to merge dataframe
+    :param col_fn: columns which use to aggregate
+    :param fn: aggregate function
+    :return: dataframe
+    """
     logging.info("Shape before new dataframe : %s" % str(new_df.shape))
-    df_news_feat = create_newfeat(ls_groupby, col_fn, fn, other_df)
+    df_news_feat = create_newfeat(ls_groupby, col_fn, fn, merge_df)
     col_new = list(
         set(list(set(df_news_feat.columns) - (set(df_news_feat.columns) & set(new_df.columns))) + ls_groupby))
-    new_df = pd.merge(new_df, df_news_feat[col_new], on=ls_groupby, how='left')
-    logging.info("Shape of new dataframe : %s" % str(new_df.shape))
-    return new_df
+    df = pd.merge(new_df, df_news_feat[col_new], on=ls_groupby, how='left')
+    logging.info("Shape of new dataframe : %s" % str(df.shape))
+    return df
 
 
-def create_newfeat(ls_groupby, column_fn, class_fns, other_df):
-    """Create new features"""
+def create_newfeat(ls_groupby, col_fn, fn, merge_df):
+    """Create new features
+
+    :param merge_df: merge dataframe
+    :param ls_groupby: columns which use to merge dataframe
+    :param col_fn: columns which use to aggregate
+    :param fn: aggregate function
+    :return: dataframe
+    """
     fns = []
     col_name = []
-    for class_fn in class_fns:
+    for class_fn in fn:
         fns.append(class_fn.get_function())
-    column_fn = list(set(column_fn) & set(other_df.columns))
+    column_fn = list(set(col_fn) & set(merge_df.columns))
     for col in column_fn:
-        for class_fn in class_fns:
+        for class_fn in fn:
             text_col = "%s_%s_%s" % (str(ls_groupby), col, class_fn.name)
             col_name.append(text_col)
-    df = other_df.groupby(ls_groupby, as_index=False).aggregate(fns)
+    df = merge_df.groupby(ls_groupby, as_index=False).aggregate(fns)
     df.columns = col_name
     df = df.reset_index()
     return df
